@@ -1,8 +1,8 @@
-# Nerfies
+# Indirect Neural Corrector
 
-This is the repository that contains source code for the [Nerfies website](https://nerfies.github.io).
+This is the repository that contains source code for the [INC website](https://tum-pbs.github.io/inc-paper/).
 
-If you find Nerfies useful for your work please cite:
+If you find INC method useful for your work please cite:
 ```
 @article{INC2025,
   title={{INC}: An Indirect Neural Corrector for Auto-Regressive Hybrid {PDE} Solvers},
