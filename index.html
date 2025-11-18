@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="INC: An Indirect Neural Corrector for Auto-Regressive Hybrid PDE Solvers">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>INC: An Indirect Neural Corrector for Auto-Regressive Hybrid PDE Solvers</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://ge.in.tum.de/publications/">
+            Physics-based simulation group
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <img src="./static/images/favicon.svg" alt="Logo" style="height: 150px; width: 150px;">
+            <h1 class="title is-1 publication-title">INC: An Indirect Neural Corrector for Auto-Regressive Hybrid PDE Solvers</h1>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/m-eng-hao-wei-phd-candidate/">Hao Wei</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/aleksandra-franz/">Aleksandra Franz</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/bjorn-list/">Bjoern List</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/n-thuerey/">Nils Thuerey</a><sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Technical University of Munich,</span>
+            <!-- <span class="author-block"><sup>2</sup>Google Research</span> -->
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/tum-pbs/INC"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/thuerey-group/INC_Data"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <div class="content has-text-justified">
+          <p>
+            Indirect Neural Corrector (INC) is a hybrid-physics learning paradigm that embeds a learned correction within the governing equations of a differentiable solver. It has been applied on a range of PDE systems to correct for unresolved physics and discretization errors while provably enhancing long-term stability in autoregressive simulations.
+
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column">
+            <img src="./static/images/tcf3d-viz-comp01.jpg" alt="INC stabilizing an otherwise unstable simulation.">
+            <!-- <p class="is-size-7 has-text-grey has-text-centered">INC remains stable and accurate even when the baseline solver fails.</p> -->
+          </div>
+          <div class="column">
+            <img src="./static/images/BFS.png" alt="Quantitative accuracy in unstable regimes."style="width: 125%; max-width: 800px;">
+            <!-- <p class="is-size-7 has-text-grey has-text-centered">Quantitative results show INC achieves the highest correlation in unstable setups.</p> -->
+          </div>
+        </div>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            When simulating partial differential equations, hybrid solvers combine coarse numerical solvers with learned correctors. They promise accelerated simulations while adhering to physical constraints. However, as shown in our theoretical framework, directly applying learned corrections to solver outputs leads to significant autoregressive errors, which originate from amplified perturbations that accumulate during long-term rollouts, especially in chaotic regimes. 
+          <p>
+            To overcome this, we propose the Indirect Neural Corrector (\(\mathrm{INC}\)), which integrates learned corrections into the governing equations rather than applying direct state updates. Our key insight is that \(\mathrm{INC}\) reduces the error amplification on the order of \(\Delta t^{-1} + L\), where \(\Delta t\) is the timestep and \(L\) the Lipschitz constant. At the same time, our framework poses no architectural requirements and integrates seamlessly with arbitrary neural networks and solvers. We test \(\mathrm{INC}\) in extensive benchmarks, covering numerous differentiable solvers, neural backbones, and test cases ranging from a 1D chaotic system to 3D turbulence. 
+          <p>
+            INC improves the long-term trajectory performance (\(R^2\)) by up to \(158.7\%\), stabilizes blowups under aggressive  coarsening, and for complex 3D turbulence cases yields speed-ups of several orders of magnitude. INC thus enables stable, efficient PDE emulation with formal error reduction, paving the way for faster scientific and engineering simulations with reliable physics guarantees. Our source code is available at <a href="https://github.com/tum-pbs/INC">GitHub.</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Motivation</h2>
+        <h3 class="title is-4">Instability of direct correction</h3>
+        <div class="content has-text-justified">
+          <p>
+             Standard methods apply a neural network correction directly to the solver's output state, which is proven to be unstable. Herein, to show the instability of this approach visually, we inject a small amount of noise into the state at each step, mimicking the errors from a neural network.
+          </p>
+        </div>
+          <div class="crop-fit">
+          <video id="replay-video-fit"
+                controls
+                muted
+                preload
+                playsinline
+                src="./static/videos/Karman_velocity_E01_DT01.mp4"
+                type="video/mp4"></video>
+                <p>Karman vortex street: Direct correction causes the simulation to diverge quickly.</p>
+        </div>
+        <br/>
+        <div class="crop-fit">
+          <video id="replay-video-fit"
+                controls
+                muted
+                preload
+                playsinline
+                src="./static/videos/BFS_velocity_E01_DT01.mp4"
+                type="video/mp4"></video>
+                <p>Backward-facing step: The simulation quickly becomes unstable and fails.</p>
+        </div>
+        <br/>
+
+        <!-- INC. -->
+        <h3 class="title is-4">Enhanced stability of INC</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our indirect method (INC) injects the correction into the governing equations instead. Applying the same level of noise shows that the simulation is significantly more robust and stable against perturbations.
+          </p>
+        </div>
+          <div class="crop-fit">
+          <video id="replay-video-fit"
+                controls
+                muted
+                preload
+                playsinline
+                src="./static/videos/Karman_source_E01_DT01.mp4"
+                type="video/mp4"></video>
+                <p>K>Karman vortex street: The INC simulation remains stable and physically plausible.</p>
+
+        </div>
+          <div class="crop-fit">
+          <video id="replay-video-fit"
+                controls
+                muted
+                preload
+                playsinline
+                src="./static/videos/BFS_source_E01_DT01.mp4"
+                type="video/mp4"></video>
+                <p>Backward-facing step: The simulation is robust and completes successfully.</p>
+        </div>
+        
+          <h3 class="title is-4">Experiments on 1D example</h3>
+        <div class="content has-text-justified">
+          <p>
+            To further investigate the sensitivity of different correction methods to perturbations, we applied similar experiments on 1D examples, the Burgers' equation and the Kuramoto–Sivashinsky equation. It clearly demonstrates that existing method (direct) is significantly more sensitive compared to ours (INC).
+          </p>
+        </div>
+
+        <div class="columns">
+          
+          <div class="column has-text-centered">
+            <img src="./static/images/KS_numerical_noise.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Numerical study of 1D Kuramoto–Sivashinsky equation</p>
+          </div>
+        
+          <div class="column has-text-centered">
+            <img src="./static/images/Burgers_numerical_noise.png"
+                 class="interpolation-image"
+                 alt="Interpolate start reference image."/>
+            <p>Numerical study of 1D Burgers equation</p>
+          </div>
+
+        </div>
+        <!--/ Re-rendering. -->
+
+      </div>
+    </div>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Methods</h2>
+        <h3 class="title is-4">Why Indirect Corrections Are Better</h3>
+        
+        <div class="content has-text-justified">
+          <p>
+            We analyze how errors propagate through hybrid neural PDE solvers during autoregressive rollouts. Our key finding is that <strong>indirect corrections reduce error accumulation by a factor of \(R_k\) compared to direct corrections</strong>, where \(R_k\) depends on the simulation time step and the system's underlying dynamics.
+          </p>
+
+          <h4 class="title is-5">Error Propagation Framework</h4>
+          <p>
+            Consider a general PDE of the form \(\partial_t u = \mathcal{N}(u)\), discretized with a time step \(\Delta t\). A neural network corrector introduces small perturbations at each step in one of two ways:
+          </p>
+          <ul>
+            <li><strong>Direct Corrections:</strong> The network perturbs the state \(u\) directly. We denote this perturbation as \(\epsilon_u\).</li>
+            <li><strong>Indirect Corrections:</strong> The network perturbs the right-hand side (RHS) of the equation, which governs the dynamics. We denote this as \(\epsilon_s\).</li>
+          </ul>
+
+          <h4 class="title is-5">Local Error (One-Step Propagation)</h4>
+          <p>
+            After a single time step, a perturbation introduced at step \(n\) creates an error \(\delta u^{n+1}\) at the next step. This error is a combination of both effects:
+            $$
+            \delta u^{n+1} = \underbrace{(I + \Delta t J) \epsilon_u}_{\text{direct error}} + \underbrace{\Delta t \epsilon_s}_{\text{indirect error}}
+            $$
+            Here, \(J\) is the Jacobian of the operator \(\mathcal{N}\), which captures how the system's dynamics amplify perturbations.
+          </p>
+
+          <h4 class="title is-5">Cumulative Error (Multi-Step Rollout)</h4>
+          <p>
+            Over many steps, these local errors accumulate. The crucial difference lies in how they grow:
+            <ul>
+                <li>Errors from <strong>direct</strong> corrections (\(\epsilon_u\)) are repeatedly multiplied by the full propagation operator \((I + \Delta t J)\), causing them to be amplified at each step.</li>
+                <li>Errors from <strong>indirect</strong> corrections (\(\epsilon_s\)) are consistently scaled down by the small time step \(\Delta t\) before they propagate.</li>
+            </ul>
+          </p>
+
+          <h4 class="title is-5">The Error Dominance Ratio (\(R_k\))</h4>
+          <p>
+            To quantify this difference, we define the Error Dominance Ratio, \(R_k\), which compares the growth of direct errors to indirect errors. Our analysis simplifies this ratio to the following relationship:
+            $$
+            R_k \sim \frac{1}{\Delta t} + L
+            $$
+            where \(L\) is the Lipschitz constant of the PDE operator, which bounds its maximum rate of change.
+          </p>
+          <h4 class="title is-5">Implications for Chaotic Systems</h4>
+          <p>
+            In typical simulations, the time step is very small (e.g., \(\Delta t = 0.01\)). This means the term \(\frac{1}{\Delta t}\) is large (e.g., 100). Consequently, <strong>direct corrections amplify errors at least 100 times more than indirect corrections</strong>, making them far more prone to instability.
+          </p>
+          <div class="box has-background-light">
+            <p class="has-text-weight-semibold">Key Insight:</p>
+            The advantage of indirect corrections is even more pronounced in chaotic systems, which are defined by a positive maximum Lyapunov exponent (\(\lambda_{\text{max}} > 0\)) that governs exponential error growth. In our framework, the Lipschitz constant \(L\) provides an upper bound for this exponent (\(L \ge \lambda_{\text{max}}\)).
+            <p>
+            </p>
+          </div>
+          <ul>
+            <li>In chaotic systems, the large value of \(L\) further increases \(R_k\), widening the stability gap between the two methods.</li>
+            <li>The rapid, amplified error growth from direct corrections can push the solver into unstable states, causing the simulation to fail or "blow up."</li>
+            <li>Indirect corrections, by keeping error growth in check via the \(\Delta t\) factor, maintain stability even in these challenging regimes.</li>
+          </ul>
+        </div>
+
+
+        <h3 class="title is-4">Indirect Neural Corrections</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our method, the Indirect Neural Corrector (INC), reframes how neural networks are integrated with numerical PDE solvers. We contrast it with the standard "solver-in-the-loop" approach, which we term a <strong>direct correction</strong>.
+          </p>
+
+          <h4 class="title is-5">Direct vs. Indirect Correction Schemes</h4>
+          
+          <p>
+            A <strong>direct correction</strong> uses an operator-splitting approach. First, a numerical solver computes a coarse prediction, and then a neural network directly adjusts this predicted state. The process can be written as:
+          </p>
+          <div class="box">
+            <p class="has-text-weight-semibold">Direct Correction:</p>
+            $$
+            \underbrace{u^{*} = \mathcal{T}\big(u^n, \mathcal{N}(u^n)\big)}_{\text{1. Coarse Solver Step}} \quad \rightarrow \quad \underbrace{u^{n+1} = \mathcal{G}_\theta(u^*)}_{\text{2. NN Correction on State}}
+            $$
+          </div>
+
+          <p>
+            In contrast, our <strong>Indirect Neural Correction (INC)</strong> integrates the neural network's output as a source term <em>inside</em> the governing PDE. The correction is applied to the equation's right-hand side (RHS) before the time integration step:
+          </p>
+          <div class="box has-background-light">
+            <p class="has-text-weight-semibold">Indirect Correction (INC):</p>
+            $$
+            u^{n+1} = \mathcal{T}\big(u^n, \underbrace{\mathcal{N}(u^n) + \mathcal{G}_\theta(u^n)}_{\text{Corrected Dynamics}}\big)
+            $$
+          </div>
+          
+          <p>
+            In these equations, \(\mathcal{T}\) is the temporal integration, \(\mathcal{N}\) represents the physical dynamics, and \(\mathcal{G}_\theta\) is the neural network. As shown in our theory, moving \(\mathcal{G}_\theta\) inside the solver has a profound stabilizing effect on long-term simulations. A key requirement for INC is that the solver \(\mathcal{T}\) must be differentiable to allow for end-to-end training.
+          </p>
+
+          <h4 class="title is-5">Unrolled Training Objective</h4>
+          <p>
+            We train the network \(\mathcal{G}_\theta\) in a supervised manner using high-resolution reference data. To promote long-term stability and accuracy, we use a multi-step unrolled optimization strategy. The model is trained to minimize the \(\mathcal{L}_2\) loss between its predicted trajectory and the ground truth over a sequence of \(m\) steps:
+          </p>
+          $$
+          \theta^* = \operatorname{arg\,min}_{\theta} \left[ \sum_{n} \sum_{s=1}^{m} \mathcal{L}_2 \left( \tilde{u}^{n+s}, (\mathcal{S}_{\theta})^s(\tilde{u}^n) \right) + \lambda \|\theta\| \right]
+          $$
+          <p>
+            Here, \( \tilde{u} \) is the high-fidelity ground truth, \( (\mathcal{S}_{\theta})^s \) represents applying the hybrid solver (either direct or indirect) autoregressively for \(s\) steps, and \(\lambda\) is a regularization term. This objective forces the network to learn corrections that are not just accurate for a single step but also lead to stable, physically plausible rollouts over time.
+          </p>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results</h2>
+
+        <!-- ACCURACY -->
+        <h3 class="title is-4">Accuracy in Long Autoregressive Rollouts</h3>
+        <div class="content has-text-justified">
+          <p>
+            We tested INC's long-term performance on challenging chaotic and shock-forming systems over thousands of steps. Compared to standard direct correction methods, INC demonstrates superior accuracy by dramatically reducing error accumulation. It achieves up to a <strong>158.7% improvement</strong> in R² correlation for chaotic systems and reduces error by up to <strong>99%</strong> when capturing sharp shock waves.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column">
+            <img src="./static/images/KS_long_R2.png" alt="Long-term accuracy on a chaotic system."style="width: 100%; max-width: 800px;">
+            <p class="is-size-7 has-text-grey has-text-centered">INC maintains accuracy far longer in a chaotic simulation.</p>
+          </div>
+          <div class="column">
+            <img src="./static/images/Burgers_MSE_plot.png" alt="Accuracy in simulating shock waves." style="width: 120%; max-width: 800px;">
+            <p class="is-size-7 has-text-grey has-text-centered">INC's prediction (bottom) closely matches the reference (top).</p>
+          </div>
+        </div>
+
+        <!-- STABILITY -->
+        <h3 class="title is-4">Improving Numerical Stability</h3>
+        <div class="content has-text-justified">
+          <p>
+            We then pushed the numerical solver into unstable regimes where it would normally fail (or "blow up") due to coarse temporal resolution. While direct correction methods struggle, <strong>INC not only prevents the simulation from failing but also maintains high accuracy</strong>, significantly outperforming other approaches that manage to remain stable.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column">
+            <img src="./static/images/stability.png" alt="INC stabilizing an otherwise unstable simulation.">
+            <p class="is-size-7 has-text-grey has-text-centered">INC remains stable and accurate even when the baseline solver fails.</p>
+          </div>
+          <div class="column">
+            <img src="./static/images/KS_Karman_MSE_plot.png" alt="Quantitative accuracy in unstable regimes."style="width: 125%; max-width: 800px;">
+            <p class="is-size-7 has-text-grey has-text-centered">Quantitative results show INC achieves the highest correlation in unstable setups.</p>
+          </div>
+        </div>
+
+        <!-- ACCELERATION -->
+        <h3 class="title is-4">Acceleration and Accuracy for Complex Cases</h3>
+        <div class="content has-text-justified">
+          <p>
+            Finally, we applied INC to complex, engineering-relevant turbulent flows. By enabling larger time steps and coarser grids without losing accuracy, INC delivers massive computational speedups. It achieves a <strong>7x speedup</strong> for a 2D flow simulation and a staggering <strong>330x speedup</strong> for a large-scale 3D turbulent flow, all while matching the statistical accuracy of a high-resolution numerical solver.
+          </p>
+        </div>
+        <div class="columns is-vcentered">
+          <div class="column">
+            <img src="./static/images/BFS_MSE_1.png" alt="Accurate vortex structures in a 2D BFS simulation." style="width: 100%; max-width: 800px;">
+            <p class="is-size-7 has-text-grey has-text-centered"><strong>7x faster:</strong> INC accurately captures complex 2D flow structures, with 1200 steps forward.</p>
+          </div>
+          <div class="column">
+            <img src="./static/images/TCF_perform.png" alt="Performance and accuracy for a 3D turbulent flow."style="width: 105%; max-width: 800px;">
+            <p class="is-size-7 has-text-grey has-text-centered"><strong>330x faster:</strong> INC accelerates complex 3D turbulent flow simulations while maintaining high accuracy.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{hao2025inc,
+  author    = {Wei, Hao and Franz, Aleksandra and List, Bjoern and Thuerey, Nils},
+  title     = {INC: An Indirect Neural Corrector for Auto-Regressive Hybrid PDE Solvers},
+  journal = {Advances in neural information processing systems},
+  year      = {2025},
+}</code></pre>
+  </div>
+</section>
+
+
+<!-- <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> -->
+
+</body>
+</html>
